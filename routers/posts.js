@@ -6,15 +6,11 @@ const mongoose = require("mongoose")
 const authMiddleware = require("../middlewares/auth-middleware")
 
 
-
-
-
 router.get("/", async (req, res) => {
     console.log(" Getting all the post API")
     const list = await Post.find({}).sort({ postId: -1 }).populate('comments')
     res.status(200).json(list)
 })
-
 router.post("/", authMiddleware, async (req, res) => {
     console.log("Writing post API")
     const posts = await Post.find({})
@@ -23,22 +19,23 @@ router.post("/", authMiddleware, async (req, res) => {
     const firstName = user.firstName
     const lastName = user.lastName
     const profilePic = user.profilePic
-    const userInfo = { firstName, lastName, profilePic }
+    const userId = user.userId
+
+    const userInfo = { firstName, lastName, profilePic, userId }
     const { content, like } = req.body
     const _id = new mongoose.Types.ObjectId()
+    const potato = { postId: _id, userId }
     await Post.create({ postId, content, userInfo, like, _id })
-    res.status(201).send({ postId: postId })
+    res.status(201).send({ potato })
 })
-
 router.delete("/:postId", authMiddleware, async (req, res) => {
     console.log("delete post API")
     const user = res.locals.user
     const { postId } = req.params
     console.log(postId)
-    await Post.findOneAndRemove({ postId })
+    await Post.findOneAndRemove({ _id: postId })
     res.status(201).send("Post successfully deleted")
 })
-
 router.put("/:postId", authMiddleware, async (req, res) => {
     console.log("delete post API")
     const user = res.locals.user
@@ -46,20 +43,21 @@ router.put("/:postId", authMiddleware, async (req, res) => {
     console.log(postId)
     const { content } = req.body
     console.log(content, "here line 5000000")
-    await Post.findOneAndUpdate({ postId }, { content })
+    await Post.findOneAndUpdate({ _id: postId }, { content })
     res.status(201).send("Post successfully updated")
 })
 
 router.put("/:postId/like", authMiddleware, async (req, res) => {
     console.log("like API")
     const { postId } = req.params
+    console.log(postId, "herherehrherhehrehrehr")
     const user = res.locals.user
     const firstName = user.firstName
     const lastName = user.lastName
     const profilePic = user.profilePic
     const userId = user.userId
     const userInfo = { firstName, lastName, profilePic, userId }
-    const post = await Post.findOne({ postId })
+    const post = await Post.findOne({ _id: postId })
     let likeCnt = post.like.likeCnt
     let userList = post.like.userList
     const isExist = userList.find(a => a.userId === userId)

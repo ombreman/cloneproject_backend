@@ -7,7 +7,15 @@ const mongoose = require("mongoose")
 const cors = require("cors")
 const socketio = require("socket.io")
 const { Server } = require("socket.io")
-const io = new Server(server)
+const Chat = require("./schemas/chats")
+//const io = new Server(server)
+
+
+const io = new Server(server, {
+    cors: { origin: "*" }
+});
+
+app.use(cors())
 
 app.get('/potato', (req, res) => {
     res.sendFile(__dirname + '/index.html')

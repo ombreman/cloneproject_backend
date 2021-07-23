@@ -3,7 +3,7 @@ const { Schema } = mongoose
 const CommentSchema = new Schema({
     _id: Schema.Types.ObjectId,
     postId: {
-        type: Number,
+        type: String,
     },
     profilePic: {
         type: String,
@@ -15,6 +15,9 @@ const CommentSchema = new Schema({
         type: String,
     },
     lastName: {
+        type: String,
+    },
+    userId: {
         type: String,
     },
     commentText: {

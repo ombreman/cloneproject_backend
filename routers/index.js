@@ -18,7 +18,8 @@ router.post("/login", async (req, res) => {
         const token = jwt.sign({ user: tokenId }, "walaby")
 
         const userInfo = {
-            fullName: user.firstName + user.lastName,
+            fistName: user.firstName,
+            lastName: user.lastName,
             profilePic: user.profilePic
         }
         return res.status(200).send({ token, userInfo })
@@ -52,7 +53,8 @@ router.get("/me", authMiddleware, async (req, res) => {
         email: user.email,
         firstName: user.firstName,
         lastName: user.lastName,
-        profilePic: user.profilePic
+        profilePic: user.profilePic,
+        userId: user.userId
     }
     res.send({ userInfo })
 })

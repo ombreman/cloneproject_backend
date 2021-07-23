@@ -11,6 +11,7 @@ const PostSchema = new Schema({
         firstName: String,
         lastName: String,
         profilePic: String,
+        userId: String,
     },
     content: {
         text: String,
